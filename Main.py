@@ -41,9 +41,12 @@ if arquivo_completa and arquivo_cpfs:
         df_cpfs.columns = ["CPF"]
         lista_cpfs = df_cpfs["CPF"].tolist()
 
-        df_completa["CPF_DESMASCARADO"] = df_completa[col_cpf_mask].apply(
-            lambda x: encontrar_cpf(x, lista_cpfs)
-        )
+        # Gerando a coluna desmascarada
+        nova_coluna = df_completa[col_cpf_mask].apply(lambda x: encontrar_cpf(x, lista_cpfs))
+
+        # Inserindo logo após a coluna mascarada
+        idx = df_completa.columns.get_loc(col_cpf_mask) + 1
+        df_completa.insert(idx, "CPF_DESMASCARADO", nova_coluna)
 
         st.success("✅ Processamento concluído!")
         st.dataframe(df_completa.head())
